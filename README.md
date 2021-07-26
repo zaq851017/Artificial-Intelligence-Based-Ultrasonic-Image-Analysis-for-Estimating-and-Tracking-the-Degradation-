@@ -6,7 +6,7 @@ To start working on this work, you should clone this repository into your local 
 In the starter code of this repository, we have provided a shell script for downloading and extracting the dataset for this assignment. For Linux users, simply use the following command.
     
     bash ./get_dataset.sh
-The shell script will automatically download the dataset and store the data in a folder called `Medcial_data`. Note that this command by default only works on Linux. If you are using other operating systems, you should download the dataset from [this link](https://drive.google.com/file/d/12Ewhd5MMRF5I9NT0E6FVoFTz3h4TQt1L/view?usp=sharing) and example input ultrasound video [this link](https://drive.google.com/file/d/1ccKv8zfjZwU10m491T4b89IKJh_rg6FH/view?usp=sharing) and unzip the compressed file manually.
+The shell script will automatically download the dataset and store the data in a folder called `Medcial_data` and the example ultrasound throat video in a folder called `input_video`. Note that this command by default only works on Linux. If you are using other operating systems, you should download the dataset from [this link](https://drive.google.com/file/d/12Ewhd5MMRF5I9NT0E6FVoFTz3h4TQt1L/view?usp=sharing) and example input ultrasound video [this link](https://drive.google.com/file/d/1ccKv8zfjZwU10m491T4b89IKJh_rg6FH/view?usp=sharing) and unzip the compressed file manually.
 
 ### Training
 
@@ -28,4 +28,7 @@ This shell script will download examples of ultrasound video and corresponding H
 > * `output_prediction` : the prediction masks and estimated HA volume.
 
 ### Results
+![image](https://github.com/zaq851017/Artificial-Intelligence-Based-Ultrasonic-Image-Analysis-for-Estimating-and-Tracking-the-Degradation-/blob/main/img3.png)
+![image](https://github.com/zaq851017/Artificial-Intelligence-Based-Ultrasonic-Image-Analysis-for-Estimating-and-Tracking-the-Degradation-/blob/main/img1.png)
+![image](https://github.com/zaq851017/Artificial-Intelligence-Based-Ultrasonic-Image-Analysis-for-Estimating-and-Tracking-the-Degradation-/blob/main/img2.png)
 
