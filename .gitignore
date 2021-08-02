@@ -6,3 +6,9 @@
 *.avi
 *.mp4
 build/
+input_video/
+output_frame/
+output_prediction/
+Medical_data/
+log/
+models/

@@ -23,28 +23,22 @@ import copy
 import random
 def train_single(config, logging, net, model_name, threshold, best_score, criterion, OPTIMIZER, scheduler, train_loader, valid_loader, test_loader, batch_size, EPOCH, LR, now_time):
     Sigmoid_func = nn.Sigmoid()
-    if config.random_train == 0:
-        random_para = -0.7
-    elif config.random_train == 1:
-        random_para = 0.7
     for epoch in range(EPOCH):
         net.train()
         train_Scorer = Scorer(config)
         train_Losser = Losser()
         for i, (image, mask) in enumerate(tqdm(train_loader, position=0, leave=True)):
-            if random.random() >= random_para:
-                image = image.cuda()
-                mask = mask.cuda()
-                output = net(image).squeeze(dim = 1)
-                loss = criterion(output, mask.float())
-                output = Sigmoid_func(output)
-                SR = torch.where(output > threshold, 1, 0).cpu()
-                GT = mask.cpu()
-                if random.random() >= random_para:
-                    OPTIMIZER.zero_grad() 
-                    loss.backward()
-                    OPTIMIZER.step()
-                train_Losser.add(loss.item())
+            image = image.cuda()
+            mask = mask.cuda()
+            output = net(image).squeeze(dim = 1)
+            loss = criterion(output, mask.float())
+            output = Sigmoid_func(output)
+            SR = torch.where(output > threshold, 1, 0).cpu()
+            GT = mask.cpu()
+            OPTIMIZER.zero_grad() 
+            loss.backward()
+            OPTIMIZER.step()
+            train_Losser.add(loss.item())
             if i % 250 == 0:
                 train_Scorer.add(SR, GT)
                 logging.info('Epoch[%d] Training[%d/%d] F1: %.4f, IOU : %.4f Loss: %.3f' %(epoch+1, i,len(train_loader) ,train_Scorer.f1(), train_Scorer.iou(), train_Losser.mean()))
@@ -78,10 +72,6 @@ def train_single(config, logging, net, model_name, threshold, best_score, criter
 
 def train_continuous(config, logging, net, model_name, threshold, best_score, criterion_single, criterion_temporal, OPTIMIZER, scheduler, train_loader, valid_loader, test_loader, batch_size, EPOCH, LR, continue_num, now_time):
     Sigmoid_func = nn.Sigmoid()
-    if config.random_train == 0:
-        random_para = -0.7
-    elif config.random_train == 1:
-        random_para = 0.8
     for epoch in range(EPOCH):
         net.train()
         train_Scorer = Scorer(config)
@@ -147,10 +137,6 @@ def train_continuous(config, logging, net, model_name, threshold, best_score, cr
 
 def train_3D(config, logging, net, model_name, threshold, best_score, criterion_single, criterion_temporal, OPTIMIZER, scheduler, train_loader, valid_loader, test_loader, batch_size, EPOCH, LR, continue_num, now_time):
     Sigmoid_func = nn.Sigmoid()
-    if config.random_train == 0:
-        random_para = -0.7
-    elif config.random_train == 1:
-        random_para = 0.8
     for epoch in range(EPOCH):
         net.train()
         train_Scorer = Scorer(config)

@@ -460,7 +460,6 @@ def MERGE_VIDEO(config):
                 height_path = os.path.join(o_full_path, num_files, "height.txt")
                 s_height_path = os.path.join(full_path, num_files)
                 os.system("cp "+height_path+" "+s_height_path)
-                print("cp "+height_path+" "+s_height_path)
                 frame2video(full_path_2)
                 film_frame2video(full_path_3)
                 if config.keep_image == 0:
@@ -610,6 +609,7 @@ if __name__ == "__main__":
     parser.add_argument('--continuous', type=int, default=1)
     parser.add_argument('--distance', type=int, default=50)
     parser.add_argument('--interval_num', type=int, default=5)
+    parser.add_argument('--continue_num', nargs="+", default=[-3, -2, -1, 0, 1, 2, 3])
     config = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     for num_file in LISTDIR(config.video_path):
@@ -629,7 +629,6 @@ if __name__ == "__main__":
                         os.makedirs(write_path)
                     height_path = os.path.join(full_path_2, "height.txt")
                     os.system("cp "+ height_path+" "+dir_write_path)
-                    print("cp "+ height_path+" "+dir_write_path)
                     while success:
                         image = cv2.resize(image, (720, 540), cv2.INTER_CUBIC)
                         if count<10:
@@ -645,14 +644,13 @@ if __name__ == "__main__":
     for files in o_files:
         img = Image.open(files).convert('RGB')
         if img.size != (720, 540):
-            print(files)
             img = img.resize((720, 540))
         img = img.crop((148, 72, 571, 424))
         img = img.resize((416, 352))
         img.save(files)
     print("image croped finished!")
     with torch.no_grad():
-        frame_continue_num = [-3, -2, -1, 0, 1, 2, 3]
+        frame_continue_num = config.continue_num
         test_loader, continue_num = get_continuous_loader(image_path = config.output_img_path,
                                     batch_size = 1,
                                     mode = 'test',

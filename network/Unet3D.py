@@ -27,7 +27,7 @@ def conv_block_2_3d(in_dim, out_dim, activation):
         nn.BatchNorm3d(out_dim),)
 
 class UNet_3D(nn.Module):
-    def __init__(self, num_class, Unet_3D_channel = 16):
+    def __init__(self, num_class, Unet_3D_channel = 8):
         super(UNet_3D, self).__init__()
         warnings.filterwarnings('ignore')
         self.in_dim = 3
@@ -73,6 +73,7 @@ class UNet_3D(nn.Module):
         up_3 = self.up_3(concat_3)
         predict = self.out(up_3)
         result = F.upsample(predict, other_frame.size()[2:])
+        print(result.shape)
         return result
 class UNet_3D_Seg(nn.Module):
     def __init__(self, num_class, Unet_3D_channel = 64, continue_num = 8):
@@ -126,6 +127,5 @@ class UNet_3D_Seg(nn.Module):
         concat_3 = torch.cat([trans_3, down1], dim=1)
         up_3 = self.up_3(concat_3)
         temporal_mask = self.out(up_3).squeeze(dim = 1)
-        import ipdb; ipdb.set_trace()
         output = self.OUT(temporal_mask)
         return output

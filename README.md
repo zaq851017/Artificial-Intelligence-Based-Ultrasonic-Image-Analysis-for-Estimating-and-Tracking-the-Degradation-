@@ -6,7 +6,14 @@ To start working on this work, you should clone this repository into your local 
 In the starter code of this repository, we have provided a shell script for downloading and extracting the dataset for this assignment. For Linux users, simply use the following command.
     
     bash ./get_dataset.sh
-The shell script will automatically download the dataset and store the data in a folder called `Medcial_data` and the example ultrasound throat video in a folder called `input_video`. Note that this command by default only works on Linux. If you are using other operating systems, you should download the dataset from [this link](https://drive.google.com/file/d/12Ewhd5MMRF5I9NT0E6FVoFTz3h4TQt1L/view?usp=sharing) and example input ultrasound video [this link](https://drive.google.com/file/d/1ccKv8zfjZwU10m491T4b89IKJh_rg6FH/view?usp=sharing) and unzip the compressed file manually.
+The shell script will automatically download the dataset and store the data in a folder called `Medcial_data` and the example ultrasound throat video in a folder called `input_video`. Note that this command by default only works on Linux. If you are using other operating systems, you should download the dataset from [this link](https://www.dropbox.com/s/0eywff6askh1wq3/Medical_data.zip?dl=0) and example input ultrasound video [this link](https://www.dropbox.com/s/83yo5tivkojvcom/input_video.zip?dl=0) and unzip the compressed file manually.
+
+### Packages
+For a list of packages you are allowed to import in this assignment, please refer to the requirments.txt for more details.
+
+You can run the following command to install all the packages listed in the requirements.txt:
+
+    pip3 install -r requirements.txt
 
 ### Training
 
@@ -14,9 +21,10 @@ The shell script will automatically download the dataset and store the data in a
 The shell script will automatically setup hyperparmeters for model.
 > ⚠️ ***Parameters Explanation*** ⚠️  
 > *  `whch_model`: the all model illustrated in all_model.py
-> * `continuous`: 0 for single-image segmentation model and 1 for temporal-image segmentation
-> * `continue_num`: whcih frame index as input such as [-3, -2, -1, 0, 1, 2, 3]
-> * `gamma`: $r$ for Temporal Loss weight $w(d) = (1 - \frac{|d|}{2 \times \rho })^r$
+> + `FCN`, `UNET`, `UNET++`, `PSPNET`, `LINKNET`, `DEEPLABV3+`, `VNET`, `TCSNet`
+> * `continuous`: `0` for single-image segmentation model and `1` for temporal-image segmentation
+> * `continue_num`: whcih frame index as input such as `[-3, -2, -1, 0, 1, 2, 3]`
+> * `gamma`: for Temporal Loss Weight Function expotent
 ### Testing
 
     bash ./test.sh

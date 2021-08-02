@@ -48,36 +48,27 @@ def main(config):
     net, model_name = WHICH_MODEL(config, frame_continue_num)
     if config.data_parallel == 1:
         net = nn.DataParallel(net)
-    now_time = datetime.now().strftime("%Y_%m_%d_%I:%M:%S_")
+    now_time = datetime.now().strftime("%Y_%m_%d_%I:%M:%S")
     if not os.path.isdir(config.save_log_path):
         os.makedirs(config.save_log_path)
-    log_name = os.path.join(config.save_log_path, now_time+"_"+model_name+"_"+str(frame_continue_num)+"_gamma="+str(config.gamma)+".log")
+    if config.continuous == 1:
+        log_name = os.path.join(config.save_log_path, now_time+"_"+model_name+"_"+str(frame_continue_num)+"_gamma="+str(config.gamma)+".log")
+        train_weight = torch.FloatTensor([10 / 1]).cuda()
+        criterion_single = IOUBCELoss(weight = train_weight)
+        criterion_temporal = Temporal_Loss(weight = train_weight, gamma = config.gamma, distance = frame_continue_num)
+    elif config.continuous == 0:
+        log_name = os.path.join(config.save_log_path, now_time+"_"+model_name+".log")
+        train_weight = torch.FloatTensor([10 / 1]).cuda()
+        criterion_single = IOUBCELoss(weight = train_weight)
     print("log_name ", log_name)
     logging.basicConfig(level=logging.DEBUG,
                         handlers = [logging.FileHandler(log_name, 'w', 'utf-8'),logging.StreamHandler()])
     logging.info(sys.argv)
-    logging.info(config)
     net = net.cuda()
     threshold = config.threshold
     best_score = config.best_score
     OPTIMIZER = optim.Adam(filter(lambda p: p.requires_grad, net.parameters()), lr = LR)
-    #scheduler = optim.lr_scheduler.ReduceLROnPlateau(OPTIMIZER, mode='max', factor=0.1, patience = 3)
-    #scheduler = optim.lr_scheduler.StepLR(OPTIMIZER, step_size = 10, gamma = 0.3)
     scheduler = optim.lr_scheduler.MultiStepLR(OPTIMIZER, milestones=[21], gamma = 0.1)
-    if config.loss_func == 0:
-        train_weight = torch.FloatTensor([10 / 1]).cuda()
-        criterion_single = IOUBCELoss(weight = train_weight)
-        criterion_temporal = Temporal_Loss(weight = train_weight, gamma = config.gamma, distance = frame_continue_num)
-        logging.info("train weight = "+str(train_weight))
-        logging.info("criterion_single = "+str(criterion_single))
-        logging.info("criterion_temporal = "+str(criterion_temporal))
-    elif config.loss_func == 1:
-        train_weight = torch.FloatTensor([10 / 1]).cuda()
-        criterion_single = DiceBCELoss(weight = train_weight)
-        criterion_temporal = DiceBCELoss(weight = train_weight)
-        logging.info("train weight = "+str(train_weight))
-        logging.info("criterion_single = "+str(criterion_single))
-        logging.info("criterion_temporal = "+str(criterion_temporal))
     if config.continuous == 0:
         logging.info("Single image version")
         train_loader = get_loader(image_path = config.train_data_path,
@@ -117,7 +108,7 @@ def main(config):
                                 shffule_yn = False,
                                 continue_num = frame_continue_num)
         logging.info("temporal frame: "+str(continue_num))
-        if config.which_model == -1 or config.which_model == -2:
+        if config.which_model == "VNET":
             train_3D(config, logging, net,model_name, threshold, best_score, criterion_single, criterion_temporal, OPTIMIZER,scheduler, train_loader, valid_loader, test_loader, BATCH_SIZE, EPOCH, LR, continue_num, now_time)
         else:          
             train_continuous(config, logging, net,model_name, threshold, best_score, criterion_single, criterion_temporal, OPTIMIZER,scheduler, train_loader, valid_loader, test_loader, BATCH_SIZE, EPOCH, LR, continue_num, now_time)
@@ -125,7 +116,7 @@ def main(config):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', type=str, default="")
-    parser.add_argument('--which_model', type=int, default=0)
+    parser.add_argument('--which_model', type=str, default="TCSNET")
     parser.add_argument('--batch_size', type=int, default=5)
     parser.add_argument('--epoch', type=int, default=50)
     parser.add_argument('--learning_rate', type=float, default=1e-4)
@@ -142,10 +133,8 @@ if __name__ == "__main__":
     parser.add_argument('--draw_temporal', type=int, default=0)
     parser.add_argument('--draw_image_path', type=str, default="Medical_data/test_image_output/")
     parser.add_argument('--Unet_3D_channel', type=int, default= 8)
-    parser.add_argument('--loss_func', type=int, default=0)
     parser.add_argument('--continue_num', nargs="+", default=[1, 2, 3, 4, 5, 6, 7, 8])
     parser.add_argument('--data_parallel', type=int, default=0)
-    parser.add_argument('--random_train', type=int, default=0)
     parser.add_argument('--w_T_LOSS', type=int, default=1)
     parser.add_argument('--gamma', type=float, default=1.0)
     config = parser.parse_args()

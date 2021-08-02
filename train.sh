@@ -1,0 +1,8 @@
+python3 train.py --continuous 0 --which_model FCN --batch_size 2 --best_score 0.6 --epoch 1  --augmentation_prob 0.0 --save_model_path ./models/FCN_model --save_log_path ./log/FCN_log
+python3 train.py --continuous 0 --which_model UNET --batch_size 2 --best_score 0.6 --epoch 1  --augmentation_prob 0.0 --save_model_path ./models/UNET_model --save_log_path ./log/UNET_log
+python3 train.py --continuous 0 --which_model UNET++ --batch_size 2 --best_score 0.6 --epoch 1  --augmentation_prob 0.0 --save_model_path ./models/UNET++_model --save_log_path ./log/UNET++_log
+python3 train.py --continuous 0 --which_model LINKNET --batch_size 2 --best_score 0.6 --epoch 1  --augmentation_prob 0.0 --save_model_path ./models/LINKNET_model --save_log_path ./log/LINKNET_log
+python3 train.py --continuous 0 --which_model PSPNET --batch_size 2 --best_score 0.6 --epoch 1  --augmentation_prob 0.0 --save_model_path ./models/PSPKNET_model --save_log_path ./log/PSPNET_log
+python3 train.py --continuous 0 --which_model DEEPLABV3+ --batch_size 2 --best_score 0.6 --epoch 1  --augmentation_prob 0.0 --save_model_path ./models/DEEPLABV3+_model --save_log_path ./log/DEEPLABV3+_log
+python3 train.py --continuous 1 --continue_num -16 -15 -14 -13 -12 -11 -10 -9 -8 -7 -6 -5 -4 -3 -2 -1 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 --which_model VNET --batch_size 2 --best_score 0.6 --epoch 1  --augmentation_prob 0.0 --save_model_path ./models/VNet_model --save_log_path ./log/VNet_log
+python3 train.py --continuous 1 --continue_num -3 -2 -1 0 1 2 3  --which_model TCSNET --batch_size 2 --best_score 0.6 --epoch 1  --augmentation_prob 0.0 --save_model_path ./models/TCSNet_model --save_log_path ./log/TCSNet_log --gamma 1.0
